@@ -1,0 +1,49 @@
+
+<h1 mat-dialog-title>{{titleAction}} Client</h1>
+<div mat-dialog-content class="inputs-container">
+    <form [formGroup]="formClient">
+        <mat-grid-list cols="2" rowHeight="100px">
+                <mat-grid-tile>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Plate</mat-label>
+                        <input matInput formControlName="plate"  autocomplete="Off">
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    <mat-form-field appearance="outline">
+                            <mat-label>Vehicle Type</mat-label>
+                            <mat-select formControlName="vehicleTypeId" (selectionChange)="vehicleSelect()">
+                              <mat-option value=1>Motorcycle</mat-option>
+                              <mat-option value=2>Light Vehicle</mat-option>
+                            </mat-select>
+                     </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Place</mat-label>
+                        <mat-select formControlName="placeId">
+                          <mat-option *ngFor="let item of placesList" [value]="item.id">{{item.name}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    <mat-form-field>
+                        <mat-label>Depature Time</mat-label>
+                        <input matInput [ngxMatDatetimePicker]="picker" placeholder="Choose a date & time" formControlName="depatureDateTime">
+                        <mat-datepicker-toggle matSuffix [for]="$any(picker)"></mat-datepicker-toggle>
+                        <ngx-mat-datetime-picker #picker></ngx-mat-datetime-picker>
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    <mat-slide-toggle [formControl]="isSlideChecked" (change)="onChange()">Electric or Hybrid</mat-slide-toggle>
+                </mat-grid-tile>
+            </mat-grid-list>
+    </form>
+    <div mat-dialog-actions>
+        <button mat-raised-button mat-dialog-close color="warn">Return</button>
+        <button mat-raised-button color="primary"
+        (click)="addEditClient()"
+        [disabled]="formClient.invalid"
+        >{{buttonAction}}</button>
+    </div>
+</div>
