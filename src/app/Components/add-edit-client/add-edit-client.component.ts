@@ -46,12 +46,16 @@ export class AddEditClientComponent implements OnInit{
     @Inject(MAT_DIALOG_DATA)public dataClient:Client
     ){
       this.formClient = this.fb.group({ 
+        id:[0],
+        admissionDateTime:[""],
         plate: ["", Validators.required],
         electricHybrid: [false,Validators.required],
         placeId: ["",{disabled: true},Validators.required],
         vehicleTypeId:["",Validators.required],
-        depatureDateTime:[""],
-        discount:[false]
+        depatureDateTime:["",Validators.required],
+        discount:[false],
+        totalPay:[""],
+        state:[false]
        })
     }
   ngOnInit(): void {
@@ -60,12 +64,12 @@ export class AddEditClientComponent implements OnInit{
         id:this.dataClient.id,
         plate: this.dataClient.plate,
         admissionDateTime: moment(this.dataClient.admissionDateTime).format('YYYY-MM-DD HH:mm:ss').toString(),
-        electricHybrid:this.dataClient.electricHybrid,
+        electricHybrid:this.checked,
         placeId: this.dataClient.placeId,
         depatureDateTime: moment(this.dataClient.depatureDateTime).format('YYYY-MM-DD HH:mm:ss').toString(),
-        discount: this.dataClient.discount,
+        discount: this.checked,
         vehicleTypeId: this.dataClient.vehicleTypeId,
-        totalPay: this.dataClient.totalPay,
+        totalPay: this.dataClient.totalPay?.toString(),
         state: this.dataClient.state
       })
       this.titleAction = "Edit";
@@ -87,12 +91,13 @@ export class AddEditClientComponent implements OnInit{
         placeId: this.formClient.value.placeId,
         discount: this.formClient.value.discount,
         vehicleTypeId: this.formClient.value.vehicleTypeId,
-        admissionDateTime: null,
+        admissionDateTime: this.formClient.value.admissionDateTime,
         depatureDateTime: moment(this.formClient.value.depatureDateTime).format('YYYY-MM-DD HH:mm:ss').toString(),
         totalPay: this.formClient.value.totalPay,
         state: this.formClient.value.state
       }
       if(this.dataClient == null){
+        console.log("modelcre",model);
         this._clientService.addClient(model).subscribe({
           next:(data)=>{
             this.showAlert("Client was created","Ready");
@@ -103,19 +108,19 @@ export class AddEditClientComponent implements OnInit{
         })
       }else{
         console.log("modeled",model);
-        /*this._clientService.updateClient(model).subscribe({
+        this._clientService.updateClient(model).subscribe({
           next:(data)=>{
             this.showAlert("Client was edited","Ready");
             this.dialogRef.close("edited");
           },error:(e)=>{
             this.showAlert("Could not edit client","Error");
           }
-        })*/
+        })
       }
     }
     onChange() {
       this.checked = this.isSlideChecked.value;
-      if(this.checked == true){
+      if(this.isSlideChecked.value == true){
         this.formClient.value.discount = true;
       }
     }
@@ -131,10 +136,10 @@ export class AddEditClientComponent implements OnInit{
             }
           }
           console.log("placesavaila",this.placesList)
-          if(this.placesList !== null){
+          if(this.placesList.length >= 1){
             this.formClient.get('placeId')?.enable();
           }else{
-            this.showAlert("There are no places available","Error");
+            this.showAlert("There are no places available, please select another vehicle type","Error");
           }
         },error:(e)=>{}
       })

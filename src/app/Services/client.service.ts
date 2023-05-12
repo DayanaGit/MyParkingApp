@@ -28,18 +28,19 @@ export class ClientService {
   }
 
   addClient(model:Client):Observable<Client>{
-    
     var client = JSON.stringify(model);
-    console.log("mod",client)
     var endPoint = `${this.endPoint}/CreateClient`
     return this.http.post<Client>(endPoint,client,httpOptions);
   }
 
   updateClient(model:Client):Observable<Client>{
-    return this.http.put<Client>(`${this.endPoint}/UpdateClient`,model);
+    var client = JSON.stringify(model);
+    var endPoint = `${this.endPoint}/UpdateClient`
+    return this.http.put<Client>(endPoint,client,httpOptions);
   }
 
   deleteClient(idClient:number):Observable<void>{
-    return this.http.delete<void>(`${this.endPoint}${idClient}`);
+    var endPoint = `${this.endPoint}/`
+    return this.http.delete<void>(`${endPoint}${idClient}`);
   }
 }

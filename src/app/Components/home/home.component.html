@@ -2,7 +2,7 @@
 
 <mat-form-field class="filter">
     <mat-label>Filter</mat-label>
-    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input class="filter">
   </mat-form-field>
 <div class="mat-elevation-z8 tableuser">
   <table mat-table [dataSource]="dataSource" matSort>
@@ -22,7 +22,7 @@
     <!-- Place Column -->
     <ng-container matColumnDef="place">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Place </th>
-      <td mat-cell *matCellDef="let row"> {{row.place}}</td>
+      <td mat-cell *matCellDef="let row"> {{row.placeId}}</td>
     </ng-container>
 
     <!-- Admission Date Column -->
@@ -68,7 +68,7 @@
         <button mat-icon-button color="primary" (click)="dialogEditClient(row)">
           <mat-icon>edit</mat-icon>
         </button>
-        <button mat-icon-button color="warn">
+        <button mat-icon-button color="warn" (click)="dialogDeleteClient(row)">
           <mat-icon>delete</mat-icon>
         </button>
       </td>

@@ -33,12 +33,14 @@ import {
   NgxMatNativeDateModule,
   NgxMatTimepickerModule
 } from '@angular-material-components/datetime-picker';
+import { DialogDeleteComponent } from './Dialogs/dialog-delete/dialog-delete.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    AddEditClientComponent
+    AddEditClientComponent,
+    DialogDeleteComponent
   ],
   imports: [
     BrowserModule,

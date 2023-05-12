@@ -1,10 +1,12 @@
 import { AfterViewInit, Component, ViewChild, OnInit} from '@angular/core';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatTableDataSource} from '@angular/material/table';
+import { MatPaginator} from '@angular/material/paginator';
+import { MatTableDataSource} from '@angular/material/table';
 import { Client } from 'src/app/Interfaces/Client';
 import { ClientService } from 'src/app/Services/client.service';
-import {MatDialog} from '@angular/material/dialog';
+import { MatDialog} from '@angular/material/dialog';
 import { AddEditClientComponent } from '../add-edit-client/add-edit-client.component';
+import { MatSnackBar} from '@angular/material/snack-bar';
+import { DialogDeleteComponent } from 'src/app/Dialogs/dialog-delete/dialog-delete.component';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -16,7 +18,7 @@ export class HomeComponent implements AfterViewInit, OnInit{
   dataSource = new MatTableDataSource<Client>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  constructor(private _clientService: ClientService, public dialog: MatDialog) { }
+  constructor(private _clientService: ClientService, public dialog: MatDialog, private _snackBar:MatSnackBar) { }
 
   ngOnInit(): void {
     this.showClients();
@@ -32,7 +34,13 @@ export class HomeComponent implements AfterViewInit, OnInit{
       this.dataSource.paginator.firstPage();
     }
   }
-
+  showAlert(msg:string, action:string){
+    this._snackBar.open(msg,action,{
+      horizontalPosition: "end",
+      verticalPosition: "top",
+      duration: 3000
+    });
+  }
   showClients(){
     this._clientService.getClients().subscribe({
       next:(res) => {
@@ -61,6 +69,22 @@ export class HomeComponent implements AfterViewInit, OnInit{
     }).afterClosed().subscribe(res =>{
       if(res === "edited"){
         this.showClients();
+      }
+    });
+  }
+  dialogDeleteClient(dataClient: Client){
+    this.dialog.open(DialogDeleteComponent,{
+      disableClose:true,
+      data:dataClient
+    }).afterClosed().subscribe(res =>{
+      if(res === "delete"){
+        this._clientService.deleteClient(dataClient.id).subscribe({
+          next:(data)=>{
+            this.showAlert("Client deleted","Ready");
+            this.showClients();
+          },error:(e)=>{console.log(e)}
+        })
+        
       }
     });
   }

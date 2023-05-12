@@ -1,0 +1,12 @@
+
+<h1 mat-dialog-title>Delete Client</h1>
+<div mat-dialog-content>
+    you want to delete the customer "{{dataClient.plate}}"?
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button mat-dialog-close color="warn">No, return</button>
+    <button mat-raised-button color="primary"
+    (click)="confirmDelete()"
+    cdkFocusInitial
+    >Yes, delete</button>
+</div>
